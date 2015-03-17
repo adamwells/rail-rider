@@ -7,6 +7,8 @@ module Phase5
 
     # setup the controller
     def initialize(req, res, route_params = {})
+      @req, @res = req, res
+      @params = Params.new(@req, route_params).parse_www_encoded_form
     end
   end
 end
