@@ -1,4 +1,5 @@
 require 'uri'
+require 'active_support/inflector'
 
 module Phase5
   class Params
@@ -12,12 +13,16 @@ module Phase5
     def initialize(req, route_params = {})
       @req = req
       @route_params = route_params
-      @params = {}
-      parse_www_encoded_form(@req.query_string)
+      @query_string = parse_www_encoded_form(@req.query_string)
+      @body = parse_www_encoded_form(@req.body)
+      @body ||= {}
+      @query_string ||= {}
+
     end
 
     def [](key)
-      @params.deep_merge(@route_params)[key]
+      @params = @body.merge(@query_string.merge(@route_params))
+      @params[key]
     end
 
     def to_s
@@ -33,12 +38,20 @@ module Phase5
     # should return
     # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
     def parse_www_encoded_form(www_encoded_form)
+      results = {}
       if www_encoded_form
+        nested_hash = {}
         URI::decode_www_form(www_encoded_form).each do |pair|
           keys = parse_key(pair.first)
-          @params["#{keys.first}"] = pair.last
+          current_value = pair.last
+          until keys.empty?
+            nested_hash[keys.pop] = current_value
+            current_value = nested_hash
+          end
         end
+        results.deep_merge!(nested_hash)
       end
+      results
     end
 
     # this should return an array
