@@ -18,6 +18,7 @@ module Phase2
     # Set the response status code and header
     def redirect_to(url)
       raise if already_built_response?
+      flash.now = {}
       @res.status = 302
       @res.header['location'] = url
       @already_built = true

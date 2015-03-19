@@ -25,4 +25,32 @@ module Phase4
       res.cookies << WEBrick::Cookie.new('_rails_lite_app', @session_hash.to_json)
     end
   end
+
+  class Flash
+    def initialize(session)
+      @session = session
+      @now = {}
+    end
+
+    def [](key)
+      @session[:flash][key]
+    end
+
+    def []=(key, val)
+      @session[:flash][key] = val
+    end
+
+    def now
+      @now
+    end
+
+    def now=(val)
+      @now = val
+    end
+
+    def store_session(res)
+      flash[now] = @now
+      @session.store_session(res)
+    end
+  end
 end
