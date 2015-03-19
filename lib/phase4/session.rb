@@ -29,6 +29,7 @@ module Phase4
   class Flash
     def initialize(session)
       @session = session
+      @session[:flash] ||= {}
       @now = {}
     end
 
@@ -49,7 +50,7 @@ module Phase4
     end
 
     def store_session(res)
-      flash[now] = @now
+      self['now'] = @now
       @session.store_session(res)
     end
   end

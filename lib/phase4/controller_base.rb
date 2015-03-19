@@ -6,7 +6,7 @@ module Phase4
     def redirect_to(url)
       super
       session.store_session(@res)
-      flash.now = {}
+      flash.now ||= {}
     end
 
     def render_content(content, content_type)
