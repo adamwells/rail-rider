@@ -1,8 +1,8 @@
 require 'webrick'
-require_relative '../lib/phase6/controller_base'
-require_relative '../lib/phase6/router'
+require_relative '../lib/controller_base'
+require_relative '../lib/router'
 
-class Controller < Phase6::ControllerBase
+class Controller < Phase2::ControllerBase
   def index
     flash.now ||= 1
     flash.now += 1
